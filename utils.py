@@ -159,3 +159,15 @@ def id2image(images_ids, ids, colors):
         images[images_ids==ids[i]] = np.array(colors[i])
 
     return images
+
+
+class TensorboardCallback(tf.keras.callbacks.Callback):
+    def __init__(self, log_dir):
+        self.writer = tf.summary.create_file_writer(log_dir)
+        self.writer.set_as_default()
+
+    def on_epoch_end(self, epoch, logs=None):
+        tf.summary.scalar('Train/Loss', logs['loss'], epoch)
+        tf.summary.scalar('Train/Accuracy', logs['categorical_accuracy'], epoch)
+        tf.summary.scalar('Val/Loss', logs['val_loss'], epoch)
+        tf.summary.scalar('Val/Accuracy', logs['val_categorical_accuracy'], epoch)
