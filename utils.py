@@ -10,6 +10,8 @@ import numpy as np
 import copy
 from cityscapesscripts.helpers.labels import labels
 
+import datetime
+
 
 def build_model(input_shape, output_classes):
     inputs = Input(input_shape)
@@ -100,6 +102,7 @@ def load_images(path, img_resolution=None):
 
     images = []
     dirs.sort()
+    num_images = 0
     for each_dir in dirs:
         img_names = os.listdir(os.path.join(path, each_dir))
         img_names.sort()
@@ -109,6 +112,7 @@ def load_images(path, img_resolution=None):
             if img_resolution:
                 img = cv2.resize(img, img_resolution, interpolation=cv2.INTER_NEAREST)
             images.append(img)
+            num_images += 1
 
     return images
 
@@ -161,6 +165,44 @@ def id2image(images_ids, ids, colors):
     return images
 
 
+def id2catid(images_ids, ids, colors):
+    images = copy.deepcopy(images_ids)
+    ids = np.array(ids)
+
+    for i in range(len(colors)):
+        if i <= 6:
+            images[images_ids==ids[i]] = np.array(0)
+        elif i <= 10:
+            images[images_ids==ids[i]] = np.array(1)
+        elif i <= 16:
+            images[images_ids==ids[i]] = np.array(2)
+        elif i <= 20:
+            images[images_ids==ids[i]] = np.array(3)
+        elif i <= 22:
+            images[images_ids==ids[i]] = np.array(4)
+        elif i <= 23:
+            images[images_ids==ids[i]] = np.array(5)
+        elif i <= 25:
+            images[images_ids==ids[i]] = np.array(6)
+        else:
+            images[images_ids==ids[i]] = np.array(7)
+
+    return images
+
+
+def catid2image(images_ids, catids, colors):
+    images = copy.deepcopy(images_ids)
+    images = np.expand_dims(images, axis=-1)
+    images = np.repeat(images, 3, axis=-1)
+    catids = np.array(catids)
+    colors = np.array(colors)
+
+    for i in range(len(colors)):
+        images[images_ids==catids[i]] = colors[i]
+
+    return images
+
+
 class TensorboardCallback(tf.keras.callbacks.Callback):
     def __init__(self, log_dir):
         self.writer = tf.summary.create_file_writer(log_dir)
@@ -171,3 +213,14 @@ class TensorboardCallback(tf.keras.callbacks.Callback):
         tf.summary.scalar('Train/Accuracy', logs['categorical_accuracy'], epoch)
         tf.summary.scalar('Val/Loss', logs['val_loss'], epoch)
         tf.summary.scalar('Val/Accuracy', logs['val_categorical_accuracy'], epoch)
+
+
+def create_datetime_dirs(root_dir):
+    date = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+    tb_logs_dir = os.path.join(root_dir, 'trainings', 'tensorboard_logs', date)
+    save_models_dir = os.path.join(root_dir, 'trainings', 'models', date)
+    data_train_dir = os.path.join(root_dir, 'cfg', date)
+    os.makedirs(tb_logs_dir)
+    os.makedirs(save_models_dir)
+    os.makedirs(data_train_dir)
+    return (tb_logs_dir, save_models_dir, data_train_dir)

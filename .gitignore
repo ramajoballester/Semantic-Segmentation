@@ -1,5 +1,8 @@
 archive.zip
+cfg
 cityscapes_data
+pickle
+__pycache__
+trainings
+videos
 .ipynb_checkpoints
-*.jpg
-*.png
