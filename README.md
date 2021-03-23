@@ -1,3 +1,7 @@
+
+
+https://user-images.githubusercontent.com/47662166/112124915-29bbf700-8bc3-11eb-9164-203f03750c53.mp4
+
 # Semantic-Segmentation
 
 Semantic Segmentation implementation in Tensorflow for autonomous vehicles
