@@ -2,7 +2,7 @@
 
 # Semantic-Segmentation
 
-Semantic Segmentation implementation in Tensorflow for autonomous vehicles
+Semantic Segmentation implementation in Tensorflow for autonomous vehicles based on U-Net architecture and ResNet-34 backbone.
 
 ## Model training
 
