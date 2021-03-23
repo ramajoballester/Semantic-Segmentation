@@ -4,7 +4,7 @@ Semantic Segmentation implementation in Tensorflow for autonomous vehicles
 
 ## Model training
 
-To train the model, run ```python train.py``` for the whole 35 classes segmentation model or ```python train_8.py``` to train the 8 category version.
+To train the model, run ```python train.py``` for 35 classes segmentation model or ```python train_8.py``` to train the 8 category version.
 
 ## Model testing
 
